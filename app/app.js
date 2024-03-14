@@ -7,6 +7,7 @@ var app = express();
 // Add static files location
 app.use(express.static("static"));
 
+
 //PUG TEMPLATING ENGINE
 app.set('view engine', 'pug');
 app.set('views', './app/views');
@@ -18,6 +19,12 @@ const db = require('./services/db');
 app.get("/", function(req, res) {
     res.render("index", {'title': 'My index page', 'heading': 'My heading'});
 });
+
+// Route for about-us page 
+app.get('/about-us', (req, res) => {
+    res.render('about-us');
+});
+
 
 // Route for All Students
 app.get("/all-students", function(req, res){
