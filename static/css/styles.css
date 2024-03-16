@@ -1,0 +1,128 @@
+/*html, body {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}*/
+
+body {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header a{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+}
+header .menu-items{
+    display: flex;
+    flex-direction: row;
+}
+header .menu-items a{
+    font-size: 17px;
+    padding: 10px;
+}
+header .menu-items a:hover{
+    color: grey;
+}
+
+/* Containter */
+/*.container{
+    max-width: 1500px;
+}*/
+
+/* FOOTER */
+footer{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer-div-1{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+.footer-div-1-inner-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.footer-div-1-inner-div a{
+    padding:13px;
+}
+footer a{
+    text-decoration: none;
+    color: black;
+}
+footer div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+hr{
+    width: 90%;
+    color:black;
+}
+
+.social-icons{
+    border: 1px solid black;
+    padding: 5px;
+    margin-left: 10px;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+
+
+/*CATEGORIES PAGE */
+
+
+
+
+
+
+
+/*DESTINATIONS PAGE */
+
+
+
+
+
+
+
+/*SINGLE BLOG POST PAGE */
+
+
+
+
+
+
+
+
+/*ABOUT PAGE */
+
+
+
+
+
+
+
+
+/*CONTACT PAGE */
