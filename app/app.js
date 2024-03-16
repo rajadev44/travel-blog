@@ -17,12 +17,35 @@ const db = require('./services/db');
 
 // Create a route for root - /
 app.get("/", function(req, res) {
-    res.render("index", {'title': 'My index page', 'heading': 'My heading'});
+    res.render("index");
 });
 
-// Route for about-us page 
-app.get('/about-us', (req, res) => {
-    res.render('about-us');
+// Route for about page 
+app.get('/about', (req, res) => {
+    res.render('about');
+});
+
+// Route for contact page 
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
+
+// Route for categories page 
+app.get('/categories', (req, res) => {
+    res.render('categories');
+});
+
+
+// Route for destinations page 
+app.get('/destinations', (req, res) => {
+    res.render('destinations');
+});
+
+
+// Route for single-post page 
+app.get('/single-post', (req, res) => {
+    res.render('single-post');
 });
 
 
