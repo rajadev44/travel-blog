@@ -1,6 +1,37 @@
 include components/header
 block content
     div.container
-        h1  Home page 
-        p Description Paragraph
+        div.home-hero-section
+            h1.hero-heading Travel Blog
+            p.hero.description A sub heading goes here and is used as a tagline. 
+            a(href="/all-posts/").btn Explore All Blogs
+        div.home-2nd-section
+            h2.hero-heading Explore
+            div.des-cats-container
+                div.cats-div
+                    h3 By Categories
+                    img(src="/img/categories.jpg", alt="")
+                div.des-div
+                    h3 By Destinations
+                    img(src="/img/destinations.jpg", alt="")
+        div.home-3rd-section
+            h2 Latest Blog Posts
+            p If you don’t see these blogs, you won’t become the superhero you were meant to be.
+            div.home-blog-posts-container
+                div.home-blog-post
+                    a(href="#") Title 1
+                    p Short part of description
+                div.home-blog-post
+                    a(href="#") Title 2
+                    p Short part of description
+                div.home-blog-post
+                    a(href="#") Title 3
+                    p Short part of description
+                    
+        div.home-5th-section
+            h2 Subscribe to our newsletter
+            form(action="", class="subscription-form")
+                input(type='email', name='email', id='subscription-email', placeholder="Email")
+                input(type='submit', value='Subscribe', class="email-btn")
+                    
 include components/footer

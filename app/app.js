@@ -49,6 +49,12 @@ app.get('/single-post', (req, res) => {
 });
 
 
+// Route for single-post page 
+app.get('/all-posts', (req, res) => {
+    res.render('all-posts');
+});
+
+
 // Route for All Students
 app.get("/all-students", function(req, res){
     sql = 'select * from students';

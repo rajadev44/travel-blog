@@ -12,9 +12,33 @@ html
         a(href="/")
           h2 TRAVEL BLOG
         div.menu-items
-          a(href="/") Home  
-          a(href="/destinations") Destinations  
-          a(href="/categories") Categories
-          a(href="/about") About 
-          a(href="/contact") Contact 
+          ul 
+            li 
+              a(href="/") Home 
+            li 
+              a(href="/destinations") Destinations
+                ul.dropdown
+                  li
+                    a(href="#") One
+                  li
+                    a(href="#") Two
+                  li
+                    a(href="#") Three
+                  li
+                    a(href="#") Four
+            li 
+              a(href="/categories") Categories
+                ul.dropdown
+                  li
+                    a(href="#") One
+                  li
+                    a(href="#") Two
+                  li
+                    a(href="#") Three
+                  li
+                    a(href="#") Four
+            li
+              a(href="/about") About 
+            li
+              a(href="/contact") Contact 
       block content
