@@ -1,6 +1,14 @@
 include components/header
 block content
-    div.categories-container
-        h1  Categories page 
-        p Description Paragraph
+    
+div.home-3rd-section
+            h1 Categories Page
+            p Posts related to this category will be shown here
+            
+            div.home-blog-posts-container
+                each row in results
+                    div.home-blog-post
+                        a(href='single-post/'+row.post_id) #{row.title}
+                        p #{row.content}
+            
 include components/footer

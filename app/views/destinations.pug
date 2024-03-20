@@ -1,6 +1,14 @@
 include components/header
 block content
-    div.destinations-container
-        h1  Destinations page 
-        p Description Paragraphs
+    
+div.home-3rd-section
+            h1 Destinations Page
+            p Posts related to this destination will be shown here but for now all posts are here.
+            
+            div.home-blog-posts-container
+                each row in results
+                    div.home-blog-post
+                        a(href='single-post/'+row.post_id) #{row.title}
+                        p #{row.content}
+            
 include components/footer

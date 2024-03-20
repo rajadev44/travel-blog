@@ -35,13 +35,19 @@ app.get('/contact', (req, res) => {
 
 // Route for categories page 
 app.get('/categories', (req, res) => {
-    res.render('categories');
+    sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts';
+db.query(sql).then(results => {
+    res.render("categories", {results:results})
+})
 });
 
 
 // Route for destinations page 
 app.get('/destinations', (req, res) => {
-    res.render('destinations');
+    sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts';
+    db.query(sql).then(results => {
+        res.render("destinations", {results:results})
+    })
 });
 
 
