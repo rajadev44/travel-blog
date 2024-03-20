@@ -29,7 +29,7 @@
     color: #FFFFFF;
 }
 
-img {
+.about-img {
     float: right; /* Float the image to the right */
     margin-top: -650px;
     margin-right: 200;
