@@ -16,8 +16,19 @@ app.set('views', './app/views');
 const db = require('./services/db');
 
 // Create a route for root - /
-app.get("/", function(req, res) {
-    res.render("index");
+app.get("/", function(req, res) {    sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts ORDER BY post_id DESC LIMIT 3';
+var output = "<div class='home-blog-posts-container'>";
+db.query(sql).then(results => {
+
+for( var row of results ){
+    output += "<div class='home-blog-post'>";
+    output += "<a href='single-post/"+row.post_id+"'>"+row.title+"</a>";
+    output += "<p>"+row.content+"...</p>";
+    output += "</div>";
+}
+output += "</div>";
+res.render("index", {output})
+})
 });
 
 // Route for about page 
@@ -43,15 +54,54 @@ app.get('/destinations', (req, res) => {
 });
 
 
-// Route for single-post page 
-app.get('/single-post', (req, res) => {
-    res.render('single-post');
+
+// Route for all posts page 
+app.get('/all-posts', (req, res) => {
+    sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts';
+    var output = "<div class='home-blog-posts-container'>";
+db.query(sql).then(results => {
+ 
+    for( var row of results ){
+        output += "<div class='home-blog-post'>";
+        output += "<a href='single-post/"+row.post_id+"'>"+row.title+"</a>";
+        output += "<p>"+row.content+"...</p>";
+        output += "</div>";
+    }
+    output += "</div>";
+    res.render("all-posts", {output})
+})
 });
 
 
+// Route for All Posts - DB
+app.get("/all-posts-db", function(req, res){
+    sql = 'select * from blog_posts';
+    var output = "<div>";
+db.query(sql).then(results => {
+ 
+    for( var row of results ){
+        output += "<div class='home-blog-post'>";
+        output += "<a href='single-post/"+row.post_id+"'>"+row.title+"</a>";
+        output += "<p>"+row.content+"</p>";
+        output += "</div>";
+    }
+    output += "</div>";
+    res.send(output)
+
+});
+})
+
+
 // Route for single-post page 
-app.get('/all-posts', (req, res) => {
-    res.render('all-posts');
+app.get('/single-post/:id', (req, res) => {
+    var postId = req.params.id;
+    var postSql = "select * from blog_posts where post_id = ?"
+
+     db.query(postSql, [postId]).then(results => {
+     //res.send(results)
+        res.render("single-post", {title: results[0].title, content:results[0].content})
+     })
+
 });
 
 
