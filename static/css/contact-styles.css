@@ -1,7 +1,12 @@
 .contact-container {
-    max-width: 800px;
-    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
+}
+.contact-container form{
+    width: 600px;
 }
 
 .centered-header {
@@ -31,7 +36,7 @@ textarea {
     resize: vertical;
 }
 
-.rounded-button[type="submit"] {
+.contact-form-button {
     background-color: #000;
     color: #fff;
     border: none;
