@@ -1,0 +1,39 @@
+.centered-header {
+    text-align: center;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.textbox {
+    border: 5px solid #000; /* Adjust thickness and color as needed */
+    padding: 10px; /* Adjust padding as needed */
+    width: 600px; /* Adjust width as needed */
+    height: 500px; /* Adjust height as needed */
+    float: left;
+    margin-left: 300px;
+    margin-top: 60px;
+    font-size: 18px;
+}
+
+.rounded-button {
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 10px 20px; /* Adjust padding as needed */
+    clear: left;
+    display: block;
+    margin-left: 300px;
+    margin-top: 150px;
+    background-color: #000000;
+    color: #FFFFFF;
+}
+
+img {
+    float: right; /* Float the image to the right */
+    margin-top: -650px;
+    margin-right: 200;
+    width: 600px; /* Adjust width as needed */
+    height: 600px; /* Adjust height as needed */
+  }
+  
