@@ -1,6 +1,17 @@
 include components/header
 block content
     div.contact-container
-        h1  Contact page 
-        p Description Paragraph
+        h1.centered-header  Contact page
+        form(action="/submit-contact" method="post")
+            div.form-group
+                label(for="name") Name:
+                input(type="text" id="name" name="name" required)
+            div.form-group
+                label(for="email") Email:
+                input(type="email" id="email" name="email" required)
+            div.form-group
+                label(for="message") Message:
+                textarea(id="message" name="message" rows="4" required)
+            button(type="submit" class="rounded-button") Submit
+
 include components/footer
