@@ -103,6 +103,30 @@ app.get("/db_test", function(req, res) {
     });
 });
 
+/* Pages that will be shown after authentication */
+
+// Route for dashboard page 
+app.get('/dashboard', (req, res) => {
+    sql = 'SELECT c.name AS category_name, d.name AS destination_name FROM categories c INNER JOIN destinations d ON c.category_id = d.destination_id;';
+db.query(sql).then(results => {
+    sql2 = 'SELECT * from blog_posts;';
+    db.query(sql2).then(postsData => {
+        
+        res.render("dashboard", {results:results, postsData: postsData});
+    })
+});
+});
+
+// Route for add new post page 
+app.get('/add-new-post', (req, res) => {
+    res.render('add-new-post');
+});
+
+// Route for update post page 
+app.get('/update-post', (req, res) => {
+    res.render('update-post');
+});
+
 
 // Start server on port 3000
 app.listen(3000,function(){
