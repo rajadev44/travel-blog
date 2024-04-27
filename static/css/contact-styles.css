@@ -14,7 +14,7 @@
 }
 
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 label {
@@ -37,7 +37,7 @@ textarea {
 }
 
 .contact-form-button {
-    background-color: #000;
+    background-color: #000000;
     color: #fff;
     border: none;
     padding: 10px 20px;
