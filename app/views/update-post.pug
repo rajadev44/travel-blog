@@ -1,6 +1,16 @@
 include components/admin-header
 block content
-    div.container
-        <h2>Update post page</h2>
+    div.dashboard-container
+        div.update-form-div
+            h1.centered-header  Update Post
+            form(action="/update-post-form" method="post")
+                div.form-group
+                    label(for="title") Title:
+                    input(type="text" id="title" name="title" required value=title)
+                div.form-group
+                    label(for="content") Content:
+                    textarea(id="content" name="content" rows="8" required)= content
+                    input(type="hidden" id="post_id" name="post_id" required value=post_id)
+                button(type="submit" class="update-post-form-button") Update
                     
 include components/admin-footer

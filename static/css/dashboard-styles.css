@@ -118,7 +118,7 @@ textarea {
     resize: vertical;
 }
 
-.add-new-post-form-button {
+.add-new-post-form-button, .update-post-form-button {
     background-color: #000000;
     color: #fff;
     border: none;
@@ -129,10 +129,20 @@ textarea {
 
 
 
+/* Update post page */
+.update-form-div {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
 
+.update-form-div form{
+    width: 600px;
+}
 
-
-/* Footer */
 /* FOOTER */
 footer{
     display: flex;

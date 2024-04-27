@@ -6,6 +6,7 @@ var app = express();
 
 // Add static files location
 app.use(express.static("static"));
+const bodyParser = require('body-parser');
 
 
 //PUG TEMPLATING ENGINE
@@ -14,6 +15,9 @@ app.set('views', './app/views');
 
 // Get the functions in the db.js file to use
 const db = require('./services/db');
+
+// Parse request body
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Create a route for root - /
 app.get("/", function(req, res) {    sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts ORDER BY post_id DESC LIMIT 3';
@@ -123,9 +127,33 @@ app.get('/add-new-post', (req, res) => {
 });
 
 // Route for update post page 
-app.get('/update-post', (req, res) => {
-    res.render('update-post');
+app.get('/update-post/:id', (req, res) => {
+    var postId = req.params.id;
+    var postSql = "select * from blog_posts where post_id = ?"
+
+     db.query(postSql, [postId]).then(results => {
+     //res.send(results)
+        res.render("update-post", {post_id:results[0].post_id, title: results[0].title, content:results[0].content})
+     })
 });
+//Route to handle updation of post
+app.post('/update-post-form', (req, res) => {
+  const { title, content, post_id } = req.body;
+
+  // Prepare the SQL UPDATE query
+  const query = 'UPDATE blog_posts SET title = ?, content = ? WHERE post_id = ?';
+  const values = [title, content, post_id];
+
+  // Execute the SQL query
+  db.query(query, values, (err, result) => {
+    if (err) throw err;
+
+    console.log(`Updated ${result.affectedRows} row(s)`);
+    res.redirect('/dashboard'); // Redirect to the admin page or any other desired route
+  });
+});
+
+
 
 app.get('/delete-post/:postId', (req, res) => {
     var postId = req.params.postId;
@@ -133,12 +161,15 @@ app.get('/delete-post/:postId', (req, res) => {
     // Delete the post from the database
     var query = 'DELETE FROM blog_posts WHERE post_id = ?';
     db.query(query, [postId], (err, result) => {
-      if (err) throw err;
-      // Redirect to dashboard
-      res.redirect('/dashboard');
-    });
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error updating blog post');
+      } else{
+        console.log(`Updated ${result.affectedRows} row(s)`);
+        res.redirect('/dashboard'); // Redirect to the admin page or any other desired route
+      }
   });
-
+});
 
 // Start server on port 3000
 app.listen(3000,function(){
