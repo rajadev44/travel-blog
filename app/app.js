@@ -26,6 +26,16 @@ db.query(sql).then(results => {
 })
 });
 
+// Register
+app.get('/register', function (req, res) {
+    res.render('register');
+});
+
+// Login
+app.get('/login', function (req, res) {
+    res.render('login');
+});
+
 // Route for about page 
 app.get('/about', (req, res) => {
     res.render('about');
