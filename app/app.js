@@ -127,6 +127,18 @@ app.get('/update-post', (req, res) => {
     res.render('update-post');
 });
 
+app.get('/delete-post/:postId', (req, res) => {
+    var postId = req.params.postId;
+  
+    // Delete the post from the database
+    var query = 'DELETE FROM blog_posts WHERE post_id = ?';
+    db.query(query, [postId], (err, result) => {
+      if (err) throw err;
+      // Redirect to dashboard
+      res.redirect('/dashboard');
+    });
+  });
+
 
 // Start server on port 3000
 app.listen(3000,function(){
