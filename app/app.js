@@ -34,21 +34,26 @@ app.get('/contact', (req, res) => {
 
 
 // Route for categories page 
-app.get('/categories', (req, res) => {
-    sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts';
-db.query(sql).then(results => {
-    res.render("categories", {results:results})
-})
+app.get('/categories/:id', (req, res) => {
+    var categoryId = req.params.id;
+    var sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts where post_id = ?';
+    db.query(sql, [categoryId]).then(results => {
+        res.render("categories", { results: results });
+    });
 });
+
 
 
 // Route for destinations page 
-app.get('/destinations', (req, res) => {
-    sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts';
-    db.query(sql).then(results => {
-        res.render("destinations", {results:results})
-    })
+app.get('/destinations/:id', (req, res) => {
+    var destinationId = req.params.id;
+    var sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts where post_id = ?';
+    db.query(sql, [destinationId]).then(results => {
+        res.render("destinations", { results: results });
+    });
 });
+
+
 
 
 
