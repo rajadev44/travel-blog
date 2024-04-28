@@ -177,7 +177,7 @@ app.post('/authenticate', async function (req, res) {
         if (uId) {
             match = await user.authenticate(params.password);
             if (match) {
-                res.redirect('/single-student/' + uId);
+                res.redirect('/add-new-post/' + uId);
             }
             else {
                 // TODO improve the user journey here
