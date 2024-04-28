@@ -80,6 +80,23 @@ app.get('/categories/:id', (req, res) => {
     });
 });
 
+// Route for categories - DB
+app.get("/categories-db/:id", function(req, res){
+    var categoryId = req.params.id;
+    var sql = 'SELECT bp.post_id, bp.title, LEFT(bp.content, 60) AS content FROM blog_posts bp INNER JOIN posts_categories pc ON bp.post_id = pc.post_id WHERE pc.category_id = ?';
+    var output = "<div>";
+
+    db.query(sql, [categoryId]).then(results => {
+        for(var post of results) {
+            output += "<div class='post'>";
+            output += "<h2>" + post.title + "</h2>";
+            output += "</div>";
+        }
+        output += "</div>";
+        res.send(output);
+    });
+});
+
 
 
 // Route for destinations page 
