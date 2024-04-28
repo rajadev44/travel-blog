@@ -168,6 +168,30 @@ app.get('/login', function (req, res) {
     res.render('login');
 });
 
+// Check submitted email and password pair
+app.post('/authenticate', async function (req, res) {
+    params = req.body;
+    var user = new User(params.email);
+    try {
+        uId = await user.getIdFromEmail();
+        if (uId) {
+            match = await user.authenticate(params.password);
+            if (match) {
+                res.redirect('/single-student/' + uId);
+            }
+            else {
+                // TODO improve the user journey here
+                res.send('invalid password');
+            }
+        }
+        else {
+            res.send('invalid email');
+        }
+    } catch (err) {
+        console.error(`Error while comparing `, err.message);
+    }
+});
+
 // Route for add new post page 
 app.get('/add-new-post', (req, res) => {
     res.render('add-new-post');
