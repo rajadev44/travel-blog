@@ -92,6 +92,21 @@ app.get('/destinations/:id', (req, res) => {
 });
 
 
+// Route for destinations - DB
+app.get("/destinations-db", function(req, res){
+    var sql = 'SELECT * FROM destinations';
+    var output = "<div>";
+
+    db.query(sql).then(results => {
+        for(var destination of results) {
+            output += "<div class='destination'>";
+            output += "<h2>" + destination.name + "</h2>";
+            output += "</div>";
+        }
+        output += "</div>";
+        res.send(output);
+    });
+});
 
 
 
