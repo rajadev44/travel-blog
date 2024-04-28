@@ -42,61 +42,23 @@ app.get('/contact', (req, res) => {
 });
 
 
-// Route for categories page 
-app.get('/categories/:id', (req, res) => {
-    var categoryId = req.params.id;
-    var sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts where post_id = ?';
-    db.query(sql, [categoryId]).then(results => {
-        res.render("categories", { results: results });
-    });
+// Route for displaying all categories
+app.get('/categories', (req, res) => {
+    var sql = 'SELECT category_id, name FROM categories';
+    db.query(sql)
+        .then(categories => {
+            res.render("categories", { categories: categories });
+        });
 });
 
-// Route for categories - DB
-app.get("/categories-db/:id", function(req, res){
-    var categoryId = req.params.id;
-    var sql = 'SELECT bp.post_id, bp.title, LEFT(bp.content, 60) AS content FROM blog_posts bp INNER JOIN posts_categories pc ON bp.post_id = pc.post_id WHERE pc.category_id = ?';
-    var output = "<div>";
-
-    db.query(sql, [categoryId]).then(results => {
-        for(var post of results) {
-            output += "<div class='post'>";
-            output += "<h2>" + post.title + "</h2>";
-            output += "</div>";
-        }
-        output += "</div>";
-        res.send(output);
-    });
+// Route for displaying all destinations
+app.get('/destinations', (req, res) => {
+    var sql = 'SELECT post_id, title, content FROM blog_posts';
+    db.query(sql)
+        .then(results => {
+            res.render("destinations", { results: results });
+        });
 });
-
-
-
-// Route for destinations page 
-app.get('/destinations/:id', (req, res) => {
-    var destinationId = req.params.id;
-    var sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts where post_id = ?';
-    db.query(sql, [destinationId]).then(results => {
-        res.render("destinations", { results: results });
-    });
-});
-
-
-// Route for destinations - DB
-app.get("/destinations-db", function(req, res){
-    var sql = 'SELECT * FROM destinations';
-    var output = "<div>";
-
-    db.query(sql).then(results => {
-        for(var destination of results) {
-            output += "<div class='destination'>";
-            output += "<h2>" + destination.name + "</h2>";
-            output += "</div>";
-        }
-        output += "</div>";
-        res.send(output);
-    });
-});
-
-
 
 // Route for all posts page 
 app.get('/all-posts', (req, res) => {
