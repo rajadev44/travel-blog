@@ -46,6 +46,24 @@ class User {
         return true;    
     }
 
+    // Test a submitted password against a stored password
+    async authenticate(submitted) {
+        var sql = "SELECT password FROM Users WHERE id = ?";
+        const result = await db.query(sql, [this.id]);
+        const match = await bcrypt.compare(submitted, result[0].password);
+        if (match == true) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    
+
+
+}
+
 module.exports  = {
     User
 }
