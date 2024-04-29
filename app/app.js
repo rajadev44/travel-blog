@@ -149,6 +149,7 @@ app.post('/authenticate', async function (req, res) {
         else {
             res.send('invalid email');
         }
+
     } catch (err) {
         console.error(`Error while comparing `, err.message);
     }
