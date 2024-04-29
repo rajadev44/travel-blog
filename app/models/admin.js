@@ -46,7 +46,7 @@ class Admin {
         return true;    
     }
 
-    // Test a submitted password against a stored password
+    // Test a submitted password against a stored password?
     async authenticate(submitted) {
          var sql = "SELECT password FROM Admin WHERE admin_id = ?";
          const result = await db.query(sql, [this.id]);
