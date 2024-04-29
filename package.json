@@ -16,7 +16,7 @@
     "express": "^4.19.2",
     "express-session": "^1.18.0",
     "mysql": "^2.18.1",
-    "mysql2": "^2.3.3",
+    "mysql2": "^3.9.7",
     "pug": "^3.0.2",
     "sessions": "^0.0.2-7",
     "supervisor": "^0.12.0"

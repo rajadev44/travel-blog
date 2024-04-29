@@ -17,7 +17,7 @@ app.set('views', './app/views');
 const db = require('./services/db');
 
 // Models- user
-const { User } = require("./models/user");
+const { Admin } = require("./models/admin");
 
 // Parse request body
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -133,11 +133,11 @@ app.get('/login', function (req, res) {
 // Check submitted email and password pair
 app.post('/authenticate', async function (req, res) {
     params = req.body;
-    var user = new User(params.email);
+    var admin = new Admin(params.email);
     try {
-        uId = await user.getIdFromEmail();
+        uId = await admin.getIdFromEmail();
         if (uId) {
-            match = await user.authenticate(params.password);
+            match = await admin.authenticate(params.password);
             if (match) {
                 res.redirect('/add-new-post/' + uId);
             }
@@ -154,9 +154,9 @@ app.post('/authenticate', async function (req, res) {
     }
 });
 
-// Route for add new post page 
+// Route for add new post page // app.post('add-new-post', (req, res) ->
 app.get('/add-new-post', (req, res) => {
-    res.render('add-new-post');
+    res.render('/add-new-post');
 });
 
 // Route for update post page 
