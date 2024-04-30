@@ -69,6 +69,15 @@ app.get('/destinations', (req, res) => {
         });
 });
 
+// Route for handling requests to /destinations/:post_id
+app.get('/destinations/:post_id', (req, res) => {
+    const destinations = req.params.destinations;
+    // Query the database to fetch posts associated with the selected destination
+    const sql = "SELECT * FROM blog_posts WHERE post_id = ?";
+        // Render the page with the posts data
+        res.render("destinations-posts", { destinations: destinations, blog_posts: results });
+});
+
 // Route for all posts page 
 app.get('/all-posts', (req, res) => {
     sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts';
@@ -109,7 +118,6 @@ app.get('/single-post/:id', (req, res) => {
      })
 
 });
-
 
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
