@@ -79,8 +79,28 @@ li {
      display: block;
    }
 
+.tv-screen {
+    position: absolute;
+    width: 950px;
+    height: 270px;
+    background: #fad5cf;
+    border-radius: 50% / 10%;
+    color: #fad5cf;
+    text-align: center;
+    z-index: -1;
+}
 
-
+.header-oval {
+    position: absolute;
+    width: 260px;
+    height: 63px;
+    background: #fad5cf;
+    border-radius: 50%;
+    color: #fad5cf;
+    top: 13;
+    left: 2;
+    z-index: -1;
+}
 
 /* Containter */
 /*.container{
