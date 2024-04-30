@@ -2,13 +2,12 @@ include components/header
 block content
     
 div.home-3rd-section
-            h1 Destinations Page
-            p Posts related to this destination will be shown here but for now all posts are here.
-            
-            div.home-blog-posts-container
-                each row in results
-                    div.home-blog-post
-                        a(href='single-post/'+row.post_id) #{row.title}
-                        p #{row.content}
+    h1 Destinations Page
+    
+    div.home-blog-posts-container
+        each destination in destinations
+            div.home-blog-post
+                a(href='/destination-posts/'+destination.destination_id) #{destination.name}
+                // Add additional content related to categories here if needed
             
 include components/footer

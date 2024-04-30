@@ -1,0 +1,13 @@
+include components/header
+block content
+    
+div.home-3rd-section
+            h1 All Blog Posts
+            
+            div.category-blog-posts-container
+                each row in results
+                    div.category-blog-post
+                        a(href='/single-post/'+row.post_id) #{row.title}
+                        p #{row.content}
+            
+include components/footer

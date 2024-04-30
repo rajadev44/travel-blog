@@ -51,6 +51,32 @@ app.get('/contact', (req, res) => {
 });
 
 
+
+// Route for displaying all categories
+app.get('/destinations', (req, res) => {
+    var sql = 'SELECT destination_id, name FROM destinations';
+    db.query(sql)
+        .then(destinations => {
+            res.render("destinations", { destinations: destinations });
+        });
+});
+
+// Route for handling requests to /destinations/:post_id
+app.get('/destination-posts/:id', (req, res) => {
+    const destination_id = req.params.id;
+
+    // Query the database to fetch posts associated with the selected destination
+    const sql = "SELECT bp.post_id, bp.title, LEFT(bp.content, 60) as content, bp.admin_id FROM blog_posts bp JOIN posts_destinations pd ON bp.post_id = pd.post_id JOIN destinations d ON pd.destination_id = d.destination_id WHERE d.destination_id = ?";
+        // Render the page with the posts data
+        db.query(sql, [destination_id])
+        .then(results => {
+            console.log(results);
+            res.render("destination-posts", {results:results})
+     })
+});
+
+
+
 // Route for displaying all categories
 app.get('/categories', (req, res) => {
     var sql = 'SELECT category_id, name FROM categories';
@@ -60,23 +86,21 @@ app.get('/categories', (req, res) => {
         });
 });
 
-// Route for displaying all destinations
-app.get('/destinations', (req, res) => {
-    var sql = 'SELECT post_id, title, content FROM blog_posts';
-    db.query(sql)
+// Route for handling requests to /destinations/:post_id
+app.get('/category-posts/:id', (req, res) => {
+    const category_id = req.params.id;
+    // Query the database to fetch posts associated with the selected destination
+    const sql = "SELECT bp.post_id, bp.title, LEFT(bp.content, 60) as content, bp.admin_id FROM blog_posts bp JOIN posts_categories pc ON bp.post_id = pc.post_id JOIN categories c ON pc.category_id = c.category_id WHERE c.category_id = ?";
+        // Render the page with the posts data
+        db.query(sql, [category_id])
         .then(results => {
-            res.render("destinations", { results: results });
-        });
+            console.log(results);
+            res.render("category-posts", {results:results})
+     })
 });
 
-// Route for handling requests to /destinations/:post_id
-app.get('/destinations/:post_id', (req, res) => {
-    const destinations = req.params.destinations;
-    // Query the database to fetch posts associated with the selected destination
-    const sql = "SELECT * FROM blog_posts WHERE post_id = ?";
-        // Render the page with the posts data
-        res.render("destinations-posts", { destinations: destinations, blog_posts: results });
-});
+
+
 
 // Route for all posts page 
 app.get('/all-posts', (req, res) => {
