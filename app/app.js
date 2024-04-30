@@ -100,11 +100,12 @@ db.query(sql).then(results => {
 // Route for single-post page 
 app.get('/single-post/:id', (req, res) => {
     var postId = req.params.id;
-    var postSql = "select * from blog_posts where post_id = ?"
+    var postSql = "SELECT * FROM blog_posts WHERE post_id = ?"
 
-     db.query(postSql, [postId]).then(results => {
+     db.query(postSql, [postId])
+        .then(results => {
      //res.send(results)
-        res.render("single-post", {title: results[0].title, content:results[0].content})
+            res.render("single-post", {title: results[0].title, content: results[0].content})
      })
 
 });
