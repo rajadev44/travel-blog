@@ -1,39 +1,40 @@
 include components/admin-header
-block content
-    div.dashboard-container
-        div.dashboard-container-1
-            h1.centered-header  Add new post form
-            form(action="/" method="post")
-                div.form-group
-                    label(for="title") Title:
-                    input(type="text" id="title" name="title" required)
-                div.form-group
-                    label(for="content") Content:
-                    textarea(id="content" name="content" rows="4" required)
-                div.form-group
-                    label(for="content") Destinations:
-                    each row in results
-                        input(type="checkbox" name="destinations[]" value=row.destination_name)
-                        | #{row.destination_name}
-                div.form-group
-                    label(for="content") Categories:
-                    each row in results
-                        input(type="checkbox" name="categories[]" value=row.category_name)
-                        | #{row.category_name}
-                button(type="submit" class="add-new-post-form-button") Submit
-        div.dashboard-container-2
-            h1.centered-header  View All Posts
-            table.view-all-posts-table
-                tr
-                    th Post ID #
-                    th Title #
-                    th Actions
-                each post in postsData
+    block content
+
+div.dashboard-container
+            div.dashboard-container-1
+                h1.centered-header  Add new post form
+                form(action="/" method="post")
+                    div.form-group
+                        label(for="title") Title:
+                        input(type="text" id="title" name="title" required)
+                    div.form-group
+                        label(for="content") Content:
+                        textarea(id="content" name="content" rows="4" required)
+                    div.form-group
+                        label(for="content") Destinations:
+                        each row in results
+                            input(type="checkbox" name="destinations[]" value=row.destination_name)
+                            | #{row.destination_name}
+                    div.form-group
+                        label(for="content") Categories:
+                        each row in results
+                            input(type="checkbox" name="categories[]" value=row.category_name)
+                            | #{row.category_name}
+                    button(type="submit" class="add-new-post-form-button") Submit
+            div.dashboard-container-2
+                h1.centered-header  View All Posts
+                table.view-all-posts-table
                     tr
-                        td #{post.post_id}
-                        td #{post.title}
-                        td
-                            a(href='update-post/'+post.post_id) Update | 
-                            a(href='delete-post/'+post.post_id) Delete
-                    
+                        th Post ID #
+                        th Title #
+                        th Actions
+                    each post in postsData
+                        tr
+                            td #{post.post_id}
+                            td #{post.title}
+                            td
+                                a(href='/update-post/'+userDetails[1]+'/'+userDetails[0]+'/'+post.post_id) Update | 
+                                a(href='/delete-post/'+post.post_id) Delete
+                        
 include components/admin-footer

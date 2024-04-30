@@ -8,6 +8,15 @@ var app = express();
 app.use(express.static("static"));
 const bodyParser = require('body-parser');
 
+// Set the sessions
+var session = require('express-session');
+app.use(session({
+  secret: 'secretkeytravelblog',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
 
 //PUG TEMPLATING ENGINE
 app.set('view engine', 'pug');
@@ -114,13 +123,19 @@ app.get("/db_test", function(req, res) {
 /* Pages that will be shown after authentication */
 
 // Route for dashboard page 
-app.get('/dashboard', (req, res) => {
+app.get('/dashboard/:username/:admin_id', (req, res) => {
+    var admin_id = req.params.admin_id;
+    var username = req.params.username;
+    let userDetails = [admin_id, username];
+
+    console.log(userDetails);
+
     sql = 'SELECT c.name AS category_name, d.name AS destination_name FROM categories c INNER JOIN destinations d ON c.category_id = d.destination_id;';
 db.query(sql).then(results => {
     sql2 = 'SELECT * from blog_posts;';
     db.query(sql2).then(postsData => {
         
-        res.render("dashboard", {results:results, postsData: postsData});
+        res.render("dashboard", {results:results, postsData: postsData, userDetails:userDetails});
     })
 });
 });
@@ -130,16 +145,35 @@ app.get('/login', function (req, res) {
     res.render('login');
 });
 
+// Logout
+app.get('/logout', function (req, res) {
+    req.session.destroy();
+    res.redirect('/login');
+  });
+  
+
 // Check submitted email and password pair
 app.post('/authenticate', async function (req, res) {
+    
     params = req.body;
+
     var admin = new Admin(params.email);
     try {
         uId = await admin.getIdFromEmail();
         if (uId) {
             match = await admin.authenticate(params.password);
             if (match) {
-                res.redirect('/add-new-post/' + uId);
+                //console.log("success")
+                
+                username = await admin.getUserNameFromEmail();
+                
+                req.session.username = username;
+                req.session.admin_id = uId;
+                req.session.loggedIn = true;
+                console.log(req.session.id);
+
+              //  res.redirect('/dashboard/'+req.session.username+'/'+req.session.admin_id);
+                res.redirect('/dashboard/'+username+'/'+uId);
             }
             else {
                 // TODO improve the user journey here
@@ -153,7 +187,32 @@ app.post('/authenticate', async function (req, res) {
     } catch (err) {
         console.error(`Error while comparing `, err.message);
     }
+
 });
+
+// Create a route for root - /
+app.get("/dashboard", function(req, res) {
+    console.log(req.session);
+    if (req.session.username) {
+        res.redirect('/dashboard/'+username+'/'+uId);
+	} else {
+		res.redirect('/login');
+	}
+	res.end();
+});
+// Create a route for add-new-post - /
+app.get("/update-post", function(req, res) {
+    console.log(req.session);
+    if (req.session.username) {
+		res.redirect('/dashboard');
+	} else {
+		res.redirect('/login');
+	}
+	res.end();
+});
+
+
+
 
 // Route for add new post page // app.post('add-new-post', (req, res) ->
 app.get('/add-new-post', (req, res) => {
@@ -161,13 +220,17 @@ app.get('/add-new-post', (req, res) => {
 });
 
 // Route for update post page 
-app.get('/update-post/:id', (req, res) => {
+app.get('/update-post/:username/:admin_id/:id', (req, res) => {
+    var admin_id = req.params.admin_id;
+    var username = req.params.username;
+    let userDetails = [admin_id, username];
+
     var postId = req.params.id;
     var postSql = "select * from blog_posts where post_id = ?"
 
      db.query(postSql, [postId]).then(results => {
      //res.send(results)
-        res.render("update-post", {post_id:results[0].post_id, title: results[0].title, content:results[0].content})
+        res.render("update-post", {post_id:results[0].post_id, title: results[0].title, content:results[0].content, userDetails:userDetails})
      })
 });
 //Route to handle updation of post
@@ -180,10 +243,10 @@ app.post('/update-post-form', (req, res) => {
 
   // Execute the SQL query
   db.query(query, values, (err, result) => {
-    if (err) throw err;
-
-    console.log(`Updated ${result.affectedRows} row(s)`);
-    res.redirect('/dashboard'); // Redirect to the admin page or any other desired route
+    if (err){throw err}
+    else{
+    res.redirect('/dashboard');
+} // Redirect to the admin page or any other desired route
   });
 });
 

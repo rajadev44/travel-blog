@@ -4,12 +4,12 @@ html
         link(rel="stylesheet" href="/css/dashboard-styles.css")
     body
       header
-        a(href="/")
-          h2 DASHBOARD - TRAVEL BLOG
-        div.menu-items
-          ul 
-            li
-              a(href="#") Logged in as (username here)
-            li
-              a(href="/logout") Logout 
+          h2 
+            a(href="/dashboard") DASHBOARD - TRAVEL BLOG
+          div.menu-items
+                ul 
+                  li
+                    a(href="#") Logged in as #{userDetails[1]}&nbsp;&nbsp;&nbsp;&nbsp;| 
+                  li
+                    a(href="/logout") Logout 
       block content
