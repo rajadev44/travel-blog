@@ -8,7 +8,7 @@
 body {
     display: flex;
     flex-direction: column;
-    font-family: Arial, sans-serif;
+    font-family: Tahoma, sans-serif;
 }
 
 /* HEADER */
@@ -16,6 +16,7 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-family: Tahoma, sans-serif;
 }
 
 header a{
@@ -28,10 +29,12 @@ header a{
 header .menu-items{
     display: flex;
     flex-direction: row;
+    
 }
 header .menu-items a{
     font-size: 17px;
     padding: 10px;
+
 }
 header .menu-items a:hover{
     color: grey;
