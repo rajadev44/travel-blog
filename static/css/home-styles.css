@@ -8,7 +8,7 @@
 body {
     display: flex;
     flex-direction: column;
-    font-family: Tahoma, sans-serif;
+    font-family: Didot, serif;
 }
 
 /* HEADER */
@@ -16,7 +16,7 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: Tahoma, sans-serif;
+    font-family: Didot, serif;
 }
 
 header a{
@@ -29,7 +29,7 @@ header a{
 header .menu-items{
     display: flex;
     flex-direction: row;
-    
+
 }
 header .menu-items a{
     font-size: 17px;
