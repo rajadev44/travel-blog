@@ -4,7 +4,7 @@ include components/admin-header
 div.dashboard-container
             div.dashboard-container-1
                 h1.centered-header  Add new post form
-                form(action="/" method="post")
+                form(action="/add-post-form" method="post")
                     div.form-group
                         label(for="title") Title:
                         input(type="text" id="title" name="title" required)
@@ -14,13 +14,13 @@ div.dashboard-container
                     div.form-group
                         label(for="content") Destinations:
                         each row in results
-                            input(type="checkbox" name="destinations[]" value=row.destination_name)
-                            | #{row.destination_name}
+                            input(type="checkbox" name="destinations[]" value=row.destination_id)
+                            | #{row.destination_name} #{row.destination_id}
                     div.form-group
                         label(for="content") Categories:
                         each row in results
-                            input(type="checkbox" name="categories[]" value=row.category_name)
-                            | #{row.category_name}
+                            input(type="checkbox" name="categories[]" value=row.category_id)
+                            | #{row.category_name} #{row.category_id}
                     button(type="submit" class="add-new-post-form-button") Submit
             div.dashboard-container-2
                 h1.centered-header  View All Posts
@@ -33,8 +33,10 @@ div.dashboard-container
                         tr
                             td #{post.post_id}
                             td #{post.title}
-                            td
-                                a(href='/update-post/'+userDetails[1]+'/'+userDetails[0]+'/'+post.post_id) Update | 
-                                a(href='/delete-post/'+post.post_id) Delete
+                            td.last-td
+                                a(href='/update-post/'+userDetails[1]+'/'+userDetails[0]+'/'+post.post_id).button Update
+                                form(action="/delete-post" method="post").dashboard-forms
+                                    input(type="hidden" name="post_id" value=post.post_id)
+                                    input(type="submit" value="Delete").button
                         
 include components/admin-footer

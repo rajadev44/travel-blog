@@ -163,7 +163,7 @@ app.get('/dashboard/:username/:admin_id', (req, res) => {
 
     console.log(userDetails);
 
-    sql = 'SELECT c.name AS category_name, d.name AS destination_name FROM categories c INNER JOIN destinations d ON c.category_id = d.destination_id;';
+    sql = 'SELECT c.category_id, c.name AS category_name, d.destination_id, d.name AS destination_name FROM categories c INNER JOIN destinations d ON c.category_id = d.destination_id;';
 db.query(sql).then(results => {
     sql2 = 'SELECT * from blog_posts;';
     db.query(sql2).then(postsData => {
@@ -233,7 +233,7 @@ app.get("/dashboard", function(req, res) {
 	}
 	res.end();
 });
-// Create a route for add-new-post - /
+// Create a route for update-post - /
 app.get("/update-post", function(req, res) {
     console.log(req.session);
     if (req.session.username) {
@@ -251,6 +251,125 @@ app.get("/update-post", function(req, res) {
 app.get('/add-new-post', (req, res) => {
     res.render('/add-new-post');
 });
+
+app.post('/add-post-form', async (req, res) => {
+    const { title, content, destinationsArray, categoriesArray } = req.body;
+  
+    console.log('req.body:', req.body);
+  
+    try {
+      // Insert the blog post into the blog_posts table
+      const insertPostQuery = 'INSERT INTO blog_posts (title, content) VALUES (?, ?)';
+      const postValues = [title, content];
+      const postResult = await db.query(insertPostQuery, postValues);
+      const postId = postResult.insertId;
+  
+      // Insert destinations into the post_destinations table
+      if (Array.isArray(destinationsArray) && destinationsArray.length > 0) {
+        const insertDestinationsPromises = destinationsArray.map(destination => {
+          const insertDestinationQuery = 'INSERT INTO post_destinations (post_id, destination_id) VALUES (?, ?)';
+          const destinationValues = [postId, destination];
+          return db.query(insertDestinationQuery, destinationValues);
+        });
+  
+        await Promise.all(insertDestinationsPromises);
+      }
+  
+      // Insert categories into the posts_categories table
+      if (Array.isArray(categoriesArray) && categoriesArray.length > 0) {
+        const insertCategoriesPromises = categoriesArray.map(category => {
+          const insertCategoryQuery = 'INSERT INTO posts_categories (post_id, category_id) VALUES (?, ?)';
+          const categoryValues = [postId, category];
+          return db.query(insertCategoryQuery, categoryValues);
+        });
+  
+        await Promise.all(insertCategoriesPromises);
+      }
+  
+      console.log('Blog post added successfully');
+      res.redirect('/dashboard');
+    } catch (err) {
+      console.error('Error adding blog post:', err);
+      res.status(500).send('Error adding blog post');
+    }
+  });
+  
+/*
+app.post('/add-post-form', (req, res) => {
+    const { title, content } = req.body;
+    const destinationsArray = req.body.destinations instanceof Array ? req.body.destinations : [req.body.destinations];
+    const categoriesArray = req.body.categories instanceof Array ? req.body.categories : [req.body.categories];
+  
+    console.log(req.body);
+
+    
+    // Insert the blog post into the blog_posts table
+    const insertPostQuery = 'INSERT INTO blog_posts (title, content) VALUES (?, ?)';
+    const postValues = [title, content];
+  
+    db.query(insertPostQuery, postValues, (err, postResult) => {
+        db.query(insertPostQuery, postValues, (err, postResult) => {
+            if (err) {
+              console.error('Error inserting blog post:', err);
+              res.status(500).send('Error adding blog post');
+            } else {
+              const postId = postResult.insertId;
+              console.log('Blog post inserted with ID:', postId);
+        
+              // Insert destinations into the post_destinations table
+              const insertDestinationsPromises = destinationsArray.map(destination => {
+                return new Promise((resolve, reject) => {
+                  const insertDestinationQuery = 'INSERT INTO post_destinations (post_id, destination_id) VALUES (?, ?)';
+                  const destinationValues = [postId, destination];
+        
+                  db.query(insertDestinationQuery, destinationValues, (err, destinationResult) => {
+                    if (err) {
+                      console.error('Error inserting destination:', err);
+                      reject(err);
+                    } else {
+                      console.log('Destination inserted for post ID:', postId);
+                      resolve();
+                    }
+                  });
+                });
+              });
+        
+              Promise.all(insertDestinationsPromises)
+                .then(() => {
+                  // Insert categories into the posts_categories table
+                  const insertCategoriesPromises = categoriesArray.map(category => {
+                    return new Promise((resolve, reject) => {
+                      const insertCategoryQuery = 'INSERT INTO posts_categories (post_id, category_id) VALUES (?, ?)';
+                      const categoryValues = [postId, category];
+        
+                      db.query(insertCategoryQuery, categoryValues, (err, categoryResult) => {
+                        if (err) {
+                          console.error('Error inserting category:', err);
+                          reject(err);
+                        } else {
+                          console.log('Category inserted for post ID:', postId);
+                          resolve();
+                        }
+                      });
+                    });
+                  });
+        
+                  return Promise.all(insertCategoriesPromises);
+                })
+                .then(() => {
+                  console.log('Blog post added successfully');
+                  res.redirect('/dashboard');
+                })
+                .catch(err => {
+                  console.error('Error adding blog post:', err);
+                  res.status(500).send('Error adding blog post');
+                });
+            }
+          });
+        });
+    });
+
+    */
 
 // Route for update post page 
 app.get('/update-post/:username/:admin_id/:id', (req, res) => {
@@ -285,20 +404,23 @@ app.post('/update-post-form', (req, res) => {
 
 
 
-app.get('/delete-post/:postId', (req, res) => {
-    var postId = req.params.postId;
-  
+app.post('/delete-post', (req, res) => {
+  //  var postId = req.params.postId;
+  const post_id = req.body.post_id;
+console.log(post_id);
+    
     // Delete the post from the database
     var query = 'DELETE FROM blog_posts WHERE post_id = ?';
-    db.query(query, [postId], (err, result) => {
+    db.query(query, [post_id], (err, result) => {
       if (err) {
         console.error(err);
         res.status(500).send('Error updating blog post');
       } else{
-        console.log(`Updated ${result.affectedRows} row(s)`);
+        console.log('Post deleted');
         res.redirect('/dashboard'); // Redirect to the admin page or any other desired route
       }
   });
+  
 });
 
 // Start server on port 3000
