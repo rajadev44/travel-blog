@@ -1,15 +1,20 @@
-// Import express.js
+// Import required modules
 const express = require("express");
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const db = require('./services/db');
+const { Admin } = require("./models/admin");
 
 // Create express app
-var app = express();
+const app = express();
 
 // Add static files location
 app.use(express.static("static"));
-const bodyParser = require('body-parser');
+
+// Configure body parser
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Set the sessions
-var session = require('express-session');
 app.use(session({
   secret: 'secretkeytravelblog',
   resave: false,
@@ -17,28 +22,18 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-
-//PUG TEMPLATING ENGINE
+// PUG TEMPLATING ENGINE
 app.set('view engine', 'pug');
 app.set('views', './app/views');
 
-// Get the functions in the db.js file to use
-const db = require('./services/db');
-
-// Models- user
-const { Admin } = require("./models/admin");
-
-// Parse request body
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Create a route for root - /
-app.get("/", function(req, res) {    sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts ORDER BY post_id DESC LIMIT 3';
-db.query(sql).then(results => {
-    res.render("index", {results:results})
-})
+// Define routes and their corresponding functionality
+app.get("/", function(req, res) {
+    // Get latest blog posts
+    const sql = 'SELECT post_id, title, LEFT(content, 60) AS content FROM blog_posts ORDER BY post_id DESC LIMIT 3';
+    db.query(sql).then(results => {
+        res.render("index", { results: results });
+    });
 });
-
-
 
 // Route for about page 
 app.get('/about', (req, res) => {
@@ -49,8 +44,6 @@ app.get('/about', (req, res) => {
 app.get('/contact', (req, res) => {
     res.render('contact');
 });
-
-
 
 // Route for displaying all categories
 app.get('/destinations', (req, res) => {
@@ -64,18 +57,12 @@ app.get('/destinations', (req, res) => {
 // Route for handling requests to /destinations/:post_id
 app.get('/destination-posts/:id', (req, res) => {
     const destination_id = req.params.id;
-
     // Query the database to fetch posts associated with the selected destination
-    const sql = "SELECT bp.post_id, bp.title, LEFT(bp.content, 60) as content, bp.admin_id FROM blog_posts bp JOIN posts_destinations pd ON bp.post_id = pd.post_id JOIN destinations d ON pd.destination_id = d.destination_id WHERE d.destination_id = ?";
-        // Render the page with the posts data
-        db.query(sql, [destination_id])
-        .then(results => {
-            console.log(results);
-            res.render("destination-posts", {results:results})
-     })
+    const sql = "SELECT bp.post_id, bp.title, LEFT(bp.content, 60) AS content, bp.admin_id FROM blog_posts bp JOIN posts_destinations pd ON bp.post_id = pd.post_id JOIN destinations d ON pd.destination_id = d.destination_id WHERE d.destination_id = ?";
+    db.query(sql, [destination_id]).then(results => {
+        res.render("destination-posts", { results: results });
+    });
 });
-
-
 
 // Route for displaying all categories
 app.get('/categories', (req, res) => {
@@ -86,7 +73,7 @@ app.get('/categories', (req, res) => {
         });
 });
 
-// Route for handling requests to /destinations/:post_id
+// Route for handling requests to //:post_id
 app.get('/category-posts/:id', (req, res) => {
     const category_id = req.params.id;
     // Query the database to fetch posts associated with the selected destination
@@ -99,9 +86,6 @@ app.get('/category-posts/:id', (req, res) => {
      })
 });
 
-
-
-
 // Route for all posts page 
 app.get('/all-posts', (req, res) => {
     sql = 'select post_id, title, LEFT(content, 60) AS content from blog_posts';
@@ -109,7 +93,6 @@ db.query(sql).then(results => {
     res.render("all-posts", {results:results})
 })
 });
-
 
 // Route for All Posts - DB
 app.get("/all-posts-db", function(req, res){
@@ -129,7 +112,6 @@ db.query(sql).then(results => {
 });
 })
 
-
 // Route for single-post page 
 app.get('/single-post/:id', (req, res) => {
     var postId = req.params.id;
@@ -145,11 +127,10 @@ app.get('/single-post/:id', (req, res) => {
 
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
-    // Assumes a table called test_table exists in your database
-    sql = 'select * from blog_posts';
+    const sql = 'SELECT * FROM blog_posts';
     db.query(sql).then(results => {
         console.log(results);
-        res.send(results)
+        res.send(results);
     });
 });
 
@@ -182,8 +163,7 @@ app.get('/login', function (req, res) {
 app.get('/logout', function (req, res) {
     req.session.destroy();
     res.redirect('/login');
-  });
-  
+});
 
 // Check submitted email and password pair
 app.post('/authenticate', async function (req, res) {
@@ -228,26 +208,24 @@ app.get("/dashboard", function(req, res) {
     console.log(req.session);
     if (req.session.username) {
         res.redirect('/dashboard/'+username+'/'+uId);
-	} else {
-		res.redirect('/login');
-	}
-	res.end();
+    } else {
+        res.redirect('/login');
+    }
+    res.end();
 });
+
 // Create a route for update-post - /
 app.get("/update-post", function(req, res) {
     console.log(req.session);
     if (req.session.username) {
-		res.redirect('/dashboard');
-	} else {
-		res.redirect('/login');
-	}
-	res.end();
+        res.redirect('/dashboard');
+    } else {
+        res.redirect('/login');
+    }
+    res.end();
 });
 
-
-
-
-// Route for add new post page // app.post('add-new-post', (req, res) ->
+// Route for add new post page
 app.get('/add-new-post', (req, res) => {
     res.render('/add-new-post');
 });
@@ -293,8 +271,8 @@ app.post('/add-post-form', async (req, res) => {
       res.status(500).send('Error adding blog post');
     }
   });
-  
-/*
+
+  /*
 app.post('/add-post-form', (req, res) => {
     const { title, content } = req.body;
     const destinationsArray = req.body.destinations instanceof Array ? req.body.destinations : [req.body.destinations];
@@ -371,7 +349,7 @@ app.post('/add-post-form', (req, res) => {
 
     */
 
-// Route for update post page 
+// Route for update post page    
 app.get('/update-post/:username/:admin_id/:id', (req, res) => {
     var admin_id = req.params.admin_id;
     var username = req.params.username;
@@ -385,47 +363,41 @@ app.get('/update-post/:username/:admin_id/:id', (req, res) => {
         res.render("update-post", {post_id:results[0].post_id, title: results[0].title, content:results[0].content, userDetails:userDetails})
      })
 });
-//Route to handle updation of post
+
+//Route to handle post update
 app.post('/update-post-form', (req, res) => {
-  const { title, content, post_id } = req.body;
-
-  // Prepare the SQL UPDATE query
-  const query = 'UPDATE blog_posts SET title = ?, content = ? WHERE post_id = ?';
-  const values = [title, content, post_id];
-
-  // Execute the SQL query
-  db.query(query, values, (err, result) => {
-    if (err){throw err}
-    else{
-    res.redirect('/dashboard');
-} // Redirect to the admin page or any other desired route
-  });
+    const { title, content, post_id } = req.body;
+    const query = 'UPDATE blog_posts SET title = ?, content = ? WHERE post_id = ?';
+    const values = [title, content, post_id];
+    db.query(query, values, (err, result) => {
+        if (err) { throw err; }
+        else { res.redirect('/dashboard'); }
+    });
 });
 
-
-
+//Route for deleting posts
 app.post('/delete-post', (req, res) => {
-  //  var postId = req.params.postId;
-  const post_id = req.body.post_id;
-console.log(post_id);
+    //  var postId = req.params.postId;
+    const post_id = req.body.post_id;
+  console.log(post_id);
+      
+      // Delete the post from the database
+      var query = 'DELETE FROM blog_posts WHERE post_id = ?';
+      db.query(query, [post_id], (err, result) => {
+        if (err) {
+          console.error(err);
+          res.status(500).send('Error updating blog post');
+        } else{
+          console.log('Post deleted');
+          res.redirect('/dashboard'); // Redirect to the admin page or any other desired route
+        }
+    });
     
-    // Delete the post from the database
-    var query = 'DELETE FROM blog_posts WHERE post_id = ?';
-    db.query(query, [post_id], (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error updating blog post');
-      } else{
-        console.log('Post deleted');
-        res.redirect('/dashboard'); // Redirect to the admin page or any other desired route
-      }
   });
   
-});
-
-// Start server on port 3000
-app.listen(3000,function(){
-    console.log(`Server running at http://127.0.0.1:3000/`);
-});
-
-/* Test */
+  // Start server on port 3000
+  app.listen(3000,function(){
+      console.log(`Server running at http://127.0.0.1:3000/`);
+  });
+  
+  /* Test */
