@@ -12,15 +12,15 @@ div.dashboard-container
                         label(for="content") Content:
                         textarea(id="content" name="content" rows="4" required)
                     div.form-group
-                        label(for="content") Destinations:
-                        each row in results
-                            input(type="checkbox" name="destinations[]" value=row.destination_id)
-                            | #{row.destination_name} #{row.destination_id}
+                        label(for="destination") Destination:
+                        select(name="destination")
+                            each row in results2
+                                option(value=row.destination_id) #{row.name}
                     div.form-group
-                        label(for="content") Categories:
+                        label(for="categories") Categories:
                         each row in results
                             input(type="checkbox" name="categories[]" value=row.category_id)
-                            | #{row.category_name} #{row.category_id}
+                            | #{row.name}
                     button(type="submit" class="add-new-post-form-button") Submit
             div.dashboard-container-2
                 h1.centered-header  View All Posts
